@@ -23,12 +23,12 @@ def pong():
 
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()  # Get the JSON data from the request
-    email = data.get('email')
-    password = data.get('password')
-    name = data.get('name')
-    surname = data.get('surname')
-    telephone = data.get('telephone')
+    data = request.json  # Get the JSON data from the request
+    email = data['email']
+    password = data['password']
+    name = data['name']
+    surname = data['surname']
+    telephone = data['telephone']
     user_type = "C"
 
     # Hash the password
@@ -48,11 +48,15 @@ def register():
         VALUES (%s, %s, %s, %s, %s, %s) RETURNING user_id;
     """, (email, password, name, surname, telephone, user_type))
     user_id = cursor.fetchone()[0]
+    conn.commit()
     cursor.execute("""
-        INSERT INTO public."Customer" ()
-        VALUES (%s) RETURNING user_id;
-    """, (user_id))
-    user_id = cursor.fetchone()[0]
+        SELECT customer_id FROM public.\"Customer\" ORDER BY customer_id DESC LIMIT 1
+    """)
+    customer_id=cursor.fetchone()[0]
+    cursor.execute("""
+        INSERT INTO public.\"Customer\" (user_id, customer_id)
+        VALUES (%s, %s);
+    """, (user_id, customer_id+1))
     conn.commit()
     cursor.close()
     conn.close()
