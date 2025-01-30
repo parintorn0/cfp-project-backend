@@ -67,9 +67,9 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()  # Get the JSON data from the request
-    email = data.get('email')
-    password = data.get('password')
+    data = request.json  # Get the JSON data from the request
+    email = data['email']
+    password = data['password']
 
     # Database Query
     conn = get_db_connection()
@@ -381,7 +381,7 @@ def save():
             conn.close()
             return jsonify({"message": "Goal's year is not number"}), 501
     if len(retirement['age']) == 0 or len(retirement['deadage']) == 0 or len(retirement['inflation']) == 0 or len(retirement['retirementage']) == 0:
-        return jsonify({"message": data['goals']}), 501
+        return jsonify({"message": "Retirement is not inputed"}), 501
     try:
         int(retirement['age'])
     except:
