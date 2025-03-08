@@ -1,0 +1,13 @@
+[project]
+name = "backend"
+dependencies = [
+    "flask",
+    "flask_cors",
+    "psycopg2-binary",
+    "Pillow"
+]
+dynamic = ["version", "description"]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
